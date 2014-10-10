@@ -1,0 +1,26 @@
+Hospital entity is unnecessary; suffices to have Room entity be Rooms entity. Rooms has foreign key of Patient entity that resides within it.
+
+Employee entity is also unnecessary; suffices to have Nurses, Technicians, ConsultingDoctors, Staff and Volunteers be children of Workers. Worker has workid as primary key. It's other attributes are fname, lname and doh.
+
+Staff has attribute area to delineate where it works.
+
+Service has a primary key, serviceid, to delineate between type of work. 
+
+Relationship provides between Volunteer and Service gets its own entity, VolunteerSchedule. It has workid from Volunteer and serviceid from Service as foreign keys; these make up its primary key. Additionally, this entity has a date attribute to determine work schedule queries.
+
+Admin entity is unnecessary since Admins are not directly invovled in patient treatment and since Patient can be given an attribute discharge to note when a patient was discharged.
+
+Admit relation between AdminDoctor and Patient are encompassed as a new entity AdmittedPatients. Specifically, AdmittedPatients has attributes diagnosisID and diagnosis. It also has foreign keys, pid from Patient and workid from AdminDoctor. diagnosisid, pid and workid make up the primary key.
+
+DiagnosticHistory will have foreign keys from Patients(pid), AdminDoctors(workerid), and Diagnosis(diagnosisid) to account for the update and has relationships between AdminDoctor, DiagnosticHistory and Patients as well as the makes relation between Diagnosis and AdminDoctor.
+
+
+Order relation between ConsultingDoctor and Treatment becomes attributes within Treatment. Specifically, Treatment will have a foreign key, prescriber, which will be a foreign key for ConsultingDoctor's workid. 
+
+Administer relation between Nurse/Technician/ConsultingDoctor and Treatment will be an attribute in Treatment. Specifically, Treatment will have a foreign key, primary, which will be a foreign key for Nurse/Technician/ConsultingDoctor workid attribute.
+
+Receives relation between Patient and Treatment will be an attribute in Treatment. Specifically, Treatment will have a foreign key, pid, which will be a foreign key for Patients pid attribute.
+
+Treatment will have a timestamp to account for when it was administered. It will have a type to de
+
+Patient will have attributes insurance, contact, admitted, discharged and primary key pid.

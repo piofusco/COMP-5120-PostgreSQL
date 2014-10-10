@@ -1,0 +1,123 @@
+/* Queries */
+
+select 'Michael' as FirstName, 'Pace' as LastName;
+
+
+select 'A. Room Utilization';
+select '------------------------------------------------';
+select '1. List the rooms that are occupied, along with the associated patient names and the date the patient was admitted.'
+select '------------------------------------------------';
+select rooms.roomnum, lastname, firstname, admitted
+from rooms
+join patients using (pid);
+
+select '------------------------------------------------';
+select '2. List the rooms that are currently unoccupied.'
+select '------------------------------------------------';
+select roomnum from rooms
+where pid is NULL;
+
+select '------------------------------------------------';
+select '3. List all rooms in the hospital along with patient names and admission dates for those that are occupied.'
+select '------------------------------------------------';
+select rooms.roomnum, lastname, firstname, admitted
+from rooms
+left outer join patients using (pid);
+
+
+
+
+
+
+select 'B. Patient Information'
+select '------------------------------------------------';
+select '1. List all patients in the database, with full personal information.'
+select '------------------------------------------------';
+select * from patients;
+
+select '------------------------------------------------';
+select '2. List all patients currently admitted to the hospital'; 
+select '(i.e., those who are currently receiving inpatient services). List only patient identification number and name.'
+select '------------------------------------------------';
+select pid, lastname, firstname from patients
+where discharged is NULL;
+
+select '------------------------------------------------';
+select '9. List patients who were admitted to the hospital within 30 days of their last discharge date.' 
+select 'For each patient list their patient identification number, name, diagnosis, and admitting doctor.'
+select '------------------------------------------------';
+SELECT A.pid as "Patient ID", P.lastname as "Patient", D.diagnosis as "Diagnosis", C.lastname as "Admitting Doctor"
+FROM  patients P
+join diagnostichistory DH using (pid)
+join diagnosis D using (diagnosisID)
+join consultingdoctors C using (workerid)
+INNER JOIN  admittedpatients A 
+  on P.pID = A.pID
+WHERE a.discharged+ interval '30 day' >=p.admitted
+and p.admitted >=a.discharged
+and DH.admitted = p.admitted;
+
+
+
+
+
+select 'C. Diagnosis and Treatment Informationselect ';
+select '------------------------------------------------';
+select '1. List the diagnoses given to admitted patients, in descending order of occurrences. List diagnosis identification number, name, and total occurrences of each diagnosis.'
+select '------------------------------------------------';
+select diagnosisID, diagnosis, count(*)
+from diagnosis
+join diagnostichistory using (diagnosisid)
+group by diagnosisid, diagnosis;
+
+select '------------------------------------------------';
+select '5. List the Treatment performed on admitted patients, in descending order of occurrences. List treatment identification number, name, and total number of occurrences of each treatment.'
+select '------------------------------------------------';
+select tid, description, count(*)
+from administeredtreatment
+join Treatment using (tid)
+group by tid, description
+order by count(*) desc;
+
+select '------------------------------------------------';
+select '8. For a given treatment occurrence, list all the hospital employees that were involved. Also include the patient name and the doctor who ordered the treatment.'
+select '------------------------------------------------';
+select treatment.description as "Treatment", workers.category as "Position", workers.lastname as "Apply by (includes Doctor who ordered)", patients.lastname as "Patient"
+from administeredtreatment
+join treatment using (tid)
+join workers using (workerid)
+join patients using (pid)
+where orderid = '555'; -- change orderid to treatment occurrence
+
+
+
+
+select 'D. Employee Informationselect';
+select '------------------------------------------------';
+select '1. List all workers at the hospital, in ascending last name, first name order. For each worker,'
+select  'list their identification number, name, job category, and date of hire.'
+select '------------------------------------------------';
+select workerid, lastname, firstname, category, doh 
+from workers
+order by lastname asc;
+
+select '------------------------------------------------';
+select '3. List the primary doctors of patients with a high admission rate (at least 4 admissions within a one-year time frame).'
+select '------------------------------------------------';
+
+select distinct lastname, firstname from admittedpatients
+join consultingdoctors using (workerid)
+where admitted > now() - interval '1 year'
+group by lastname, firstname
+having count(*) >= 4;
+
+select '------------------------------------------------';
+select '5. For a given doctor, list all Treatment that they ordered in descending order of occurrence.' 
+select 'For each treatment, list the total number of occurrences for the given doctor.'
+select '------------------------------------------------';
+
+select description, count(*) from Treatment
+left outer join OrderedTreatment using (tid)
+where workerid = '000' -- change this to doctor's workerid
+group by tid, description
+order by count(*) desc;

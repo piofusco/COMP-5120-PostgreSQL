@@ -1,0 +1,13 @@
+A Hospital has many Rooms. A Room belongs to one Hospital. A Room can be assigned only to one Patient and vice versa.
+
+Worker is superclass to Volunteer and Employee.
+
+Any number of Volunteers provide Service on a schedule
+
+Employee is superclass to Admin, ConsultingDoctor, Nurse, Technician and Staff.
+
+Staff have an area attribute to determine the area of the Hospital they work in.
+
+ConsultingDoctor is superclass to AdminDoctor. ConsultingDoctor can order any number of Treatments. Treatment has to be ordered by exactly one ConsultingDoctor. Treatment is received by any number of Patient. A Patient can receive any number of Treatments. Treatment can be administered by one or more Nurses, ConsultingDoctors or Technicians. Nurses, ConsultingDoctors or Technicians can administer any number of Treatments. Outpatient and Inpatient treatments are specified by a Type attribute in Treatment. Medications and Procedures are specified by a description attribute in Treatment.
+
+AdminDoctor can admit/discharge any number of Patients. AdminDoctor can update any number of DiagnosticHistory. A Patient has one DiagnosticHistory. A Patient can be admitted by any number of AdminDoctors.

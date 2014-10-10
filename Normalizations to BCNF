@@ -1,0 +1,51 @@
+Normalizations to BCNF - all left hand sides are BCNF. No normalization needed.
+
+Patients
+	(pid -> roomNum, firstname, lastname, insurance, contact, type, admitted, discharged) 
+
+Diagnosis
+	(diagnosisID -> diagnosis)
+Rooms
+	(roomNum -> pid)
+	
+Workers 
+	(workerid -> lastname, firstname, doh, category)
+
+Volunteers
+	(workerid -> lastname, firstname, doh)
+
+Services
+	(serviceid -> description)
+
+VolunteerSchedule
+	(workerid, serviceid -> schedule)
+
+ConsultingDoctors
+	(workerid -> lastname, firstname, doh)
+
+Staff 
+	(workerid -> lastname, firstname, doh, area)
+	
+Treatment
+	(tid -> description, type)
+
+Nurses
+	(workerid -> lastname, firstname, doh)
+
+Technicians
+	(workerid -> lastname, firstname, doh)
+
+AdminDoctors
+	(workerid -> lastname, firstname, doh)
+
+AdministeredTreatment
+	(orderid, tid, pid, workerid, type, time)
+	
+OrderedTreatment
+	(orderid -> tid, pid, workerid, timeapplied)
+
+AdmittedPatients
+	(diagnosisID, workerid, pid) -> discharged
+
+DiagnosticHistory
+	(diagnosisID, workerid, pid) -> admitted 

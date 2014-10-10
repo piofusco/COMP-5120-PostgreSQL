@@ -1,0 +1,143 @@
+Relational Schema
+
+Patients(
+	pid char(3) NOT NULL,
+	roomNum smallint, 
+	firstname varchar(20),
+	lastname varchar(20),
+	insurance varchar(20), 
+	contact varchar(20),
+	type char(1), -- I, for Inpatient, 0 for Outpatient
+	admitted date,
+	discharged date,
+	PRIMARY KEY (pid)
+)
+Diagnosis(
+	diagnosisID char(3), -- consider making this unique
+	diagnosis varchar(20),
+	PRIMARY KEY (diagnosisID)
+)
+Rooms(
+	roomNum smallint NOT NULL,
+	pid char(3),
+	PRIMARY KEY (roomNum),
+	FOREIGN KEY (pid) REFERENCES Patients(pid)
+)
+Workers (
+	workerid char(3) NOT NULL,
+	lastname varchar(20), 
+	firstname varchar(20),
+	doh date,
+	category varchar(20),
+	PRIMARY KEY (workerid)
+)
+Volunteers(
+	workerid char(3),
+	lastname varchar(20), 
+	firstname varchar(20),
+	doh date,
+	PRIMARY KEY (workerid),
+	FOREIGN KEY (workerid) REFERENCES Workers(workerid)
+)
+Services(
+	serviceid char(3) NOT NULL,
+	description varchar(20),
+	PRIMARY KEY (serviceid)
+)
+VolunteerSchedule(
+	workerid char(3),
+	serviceid char(3),
+	schedule char(5), --MTWRF, add this to assumptions
+	PRIMARY KEY(workerid, serviceid),
+	FOREIGN KEY(workerid) REFERENCES Volunteers(workerid), 
+	FOREIGN KEY(serviceid) REFERENCES Services(serviceid) 
+)
+ConsultingDoctors(
+	workerid char(3),
+	lastname varchar(20),
+	firstname varchar(20),
+	doh date,
+	PRIMARY KEY (workerid),
+	FOREIGN KEY (workerid) REFERENCES Workers(workerid)
+)
+Staff (
+	workerid char(3),
+	lastname varchar(20), 
+	firstname varchar(20),
+	doh date,
+	area varchar(20),
+	PRIMARY KEY (workerid),
+	FOREIGN KEY (workerid) REFERENCES Workers(workerid)
+)
+Treatment(
+	tid char(3), -- consider making this unique
+	description varchar(20),
+	type char(1), -- either Inpatient or Outpatient
+	PRIMARY KEY (tid)
+)
+Nurses(
+	workerid char(3),
+	lastname varchar(20), 
+	firstname varchar(20),
+	doh date,
+	PRIMARY KEY (workerid),
+	FOREIGN KEY (workerid) REFERENCES Workers(workerid)
+)
+Technicians(
+	workerid char(3),
+	lastname varchar(20), 
+	firstname varchar(20),
+	doh date,
+	PRIMARY KEY (workerid),
+	FOREIGN KEY (workerid) REFERENCES Workers(workerid)
+)
+AdminDoctors(
+	workerid char(3),
+	lastname varchar(20), 
+	firstname varchar(20),
+	doh date,
+	PRIMARY KEY (workerid),
+	FOREIGN KEY (workerid) REFERENCES ConsultingDoctors(workerid)
+)
+AdministeredTreatment(
+	orderid char(3),
+	tid char(3),
+	pid char(3),
+	workerid char(3),
+	type char(1),
+	time date, -- default CURRENT_DATE,
+	PRIMARY KEY (tid, workerid, pid),
+	FOREIGN KEY (tid) REFERENCES Treatment(tid),
+	FOREIGN KEY (workerid) REFERENCES Workers(workerid),
+	FOREIGN KEY (pid) REFERENCES Patients(pid)
+)
+OrderedTreatment(
+	orderid char(3) UNIQUE,
+	tid char(3),
+	pid char(3),
+	workerid char(3),
+	timeapplied date,
+	PRIMARY KEY (tid, workerid, pid),
+	FOREIGN KEY (tid) REFERENCES Treatment(tid),
+	FOREIGN KEY (workerid) REFERENCES ConsultingDoctors(workerid),
+	FOREIGN KEY (pid) REFERENCES Patients(pid)
+)
+AdmittedPatients(
+	pid char(3),
+	workerid char(3),
+	admitted date, 
+	discharged date,
+	PRIMARY KEY (pid, workerid, admitted),
+	FOREIGN KEY (pid) REFERENCES Patients(pid),
+	FOREIGN KEY (workerid) REFERENCES AdminDoctors(workerid)
+)
+DiagnosticHistory(
+	diagnosisID char(3),
+	workerid char(3),
+	pid char(3),
+	admitted date,
+	PRIMARY KEY (diagnosisID, workerid, pid),
+	FOREIGN KEY (workerid) REFERENCES AdminDoctors(workerid),
+	FOREIGN KEY (pid) REFERENCES Patients(pid),
+	FOREIGN KEY (diagnosisID) REFERENCES Diagnosis(diagnosisID)
+)

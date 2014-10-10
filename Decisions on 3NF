@@ -1,0 +1,9 @@
+Assumed Volunteers can only work during the week, Monday-Friday. 
+Assumed patient can't come in twice with the same diganosis. 
+Assumed time of outpatient treatment was not monitored.
+Assumed Patient could be re-diagnosed while staying at the hospital.
+Assumed only AdminDoctors could admit Patients to the hospital. 
+Assumed AdminDoctors were the only primary doctors. 
+Assumed only one Doctor would be involved on any Treatment, however there can be any number of Nurses/Technicians.
+
+All of my tables were in BCNF - I included this text message just as a placeholder to show I didn't have to make any decisions on tables being in 3NF.
